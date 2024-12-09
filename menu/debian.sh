@@ -2,7 +2,7 @@
 # Quick Setup | Script Setup Manager
 # Edition : Stable Edition 1.0
 # Auther  :   Emmkash
-# Emmkash tecg
+# Emmkash tech
 # (C) Copyright 2024
 # =========================================
 # pewarna hidup
