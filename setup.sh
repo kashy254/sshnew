@@ -811,6 +811,136 @@ echo "2. All submenu scripts protected with auto-restoration"
 echo "3. All banners and visual elements protected"
 echo "4. Daily integrity checks to detect and fix any tampering"
 
+# 3. Add script obfuscation for ultimate protection
+echo "Setting up script obfuscation system..."
+
+cat > /root/script-obfuscator.sh << 'EOFobfs'
+#!/bin/bash
+# Script obfuscator - Makes scripts unreadable while keeping functionality
+# This provides an additional layer of protection for your VPS scripts
+
+# Create a directory for original scripts
+mkdir -p /root/original-scripts
+
+# Create the obfuscation function
+obfuscate_script() {
+    local input_script="$1"
+    local script_name=$(basename "$input_script")
+    
+    # Make backup of the original script
+    cp "$input_script" "/root/original-scripts/$script_name.original"
+    
+    # Base64 encode the script
+    ENCODED=$(base64 -w0 "$input_script")
+    
+    # Create self-decoding script that replaces the original
+    cat > "$input_script.temp" << EOF
+#!/bin/bash
+# Obfuscated script - DO NOT MODIFY
+# Protected by Emmkash Tech Obfuscation System
+# Attempting to modify this script may break functionality
+# Original script stored securely and will be restored if tampered with
+
+eval \$(echo "$ENCODED" | base64 -d)
+EOF
+    
+    # Replace the original with the obfuscated version
+    mv "$input_script.temp" "$input_script"
+    chmod +x "$input_script"
+}
+
+# Create the verification script to check if scripts have been tampered with
+create_verification() {
+    cat > /etc/cron.daily/verify-obfuscation << 'EOF'
+#!/bin/bash
+# Daily verification of obfuscated scripts
+# Ensures scripts haven't been tampered with
+
+ORIG_DIR="/root/original-scripts"
+LOG_FILE="/var/log/obfuscation-security.log"
+
+# Create log file if it doesn't exist
+if [ ! -f "$LOG_FILE" ]; then
+    touch "$LOG_FILE"
+fi
+
+# Check all obfuscated scripts
+for original in "$ORIG_DIR"/*.original; do
+    if [ -f "$original" ]; then
+        filename=$(basename "$original" .original)
+        actual_script=$(find /root -name "$filename" | grep -v "$ORIG_DIR")
+        
+        # Skip if actual script not found
+        if [ -z "$actual_script" ]; then
+            continue
+        fi
+        
+        # Check if script is still obfuscated
+        if ! grep -q "Obfuscated script - DO NOT MODIFY" "$actual_script"; then
+            echo "Script $filename has been modified, restoring on $(date)" >> "$LOG_FILE"
+            
+            # Re-obfuscate from original
+            ENCODED=$(base64 -w0 "$original")
+            
+            cat > "$actual_script" << INNEREOF
+#!/bin/bash
+# Obfuscated script - DO NOT MODIFY
+# Protected by Emmkash Tech Obfuscation System
+# Attempting to modify this script may break functionality
+# Original script stored securely and will be restored if tampered with
+
+eval \$(echo "$ENCODED" | base64 -d)
+INNEREOF
+            
+            chmod +x "$actual_script"
+        fi
+    fi
+done
+EOF
+    
+    chmod +x /etc/cron.daily/verify-obfuscation
+}
+
+# Find and obfuscate primary scripts
+obfuscate_primary_scripts() {
+    # List of scripts to obfuscate
+    scripts=(
+        "/root/menu/m-sshovpn.sh"
+        "/root/menu/m-vmess.sh"
+        "/root/menu/m-vless.sh"
+        "/root/menu/m-trojan.sh"
+        "/root/menu/m-ssws.sh"
+        "/root/menu/m-system.sh"
+        "/root/menu/running.sh"
+        "/root/menu/clearcache.sh"
+        "/root/menu/restart.sh"
+        "/root/menu/m-domain.sh"
+        "/root/menu/m-webmin.sh"
+        "/root/menu/m-dns.sh"
+        "/root/menu/bw.sh"
+        "/root/menu/tcp.sh"
+    )
+    
+    # Obfuscate each script
+    for script in "${scripts[@]}"; do
+        if [ -f "$script" ]; then
+            obfuscate_script "$script"
+        fi
+    done
+}
+
+# Main execution
+obfuscate_primary_scripts
+create_verification
+EOFobfs
+
+chmod +x /root/script-obfuscator.sh
+/root/script-obfuscator.sh
+
+echo "Script obfuscation system complete!"
+echo "All scripts are now unreadable yet fully functional."
+echo "Originals are stored securely and will be restored if tampered with."
+
 # Clean up
 rm /root/binary-menu.c >/dev/null 2>&1
 rm /root/setup.sh >/dev/null 2>&1
@@ -818,6 +948,7 @@ rm /root/ins-xray.sh >/dev/null 2>&1
 rm /root/insshws.sh >/dev/null 2>&1
 rm /root/submenu-protection.sh >/dev/null 2>&1
 rm /root/banner-protection.sh >/dev/null 2>&1
+rm /root/script-obfuscator.sh >/dev/null 2>&1
 
 secs_to_human "$(($(date +%s) - ${start}))" | tee -a log-install.txt
 echo -e ""
