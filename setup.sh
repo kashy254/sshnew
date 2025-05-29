@@ -353,7 +353,7 @@ void displayFooter() {
     // This is the protected part that can't be edited
     printf("\e[1;33m -------------------------------------------------\e[0m\n");
     printf("\e[1;32m Client Name \e[0m: Emmkash-Tech\n"); // Protected name
-    printf("\e[1;32m Expired     \e[0m: Lifetime\n");
+    printf("\e[1;32m Expiry      \e[0m: Lifetime\n");
     printf("\e[1;33m -------------------------------------------------\e[0m\n");
     printf("\n");
     printf("\e[1;36m -----------SCRIPT BY EMMKASH-TECH(0112735877)-------------------\e[0m\n"); // Protected branding
@@ -631,13 +631,6 @@ cat > /root/banner-protection.sh << 'EOFban'
 # Banner and visual elements protection script
 # This script ensures all banners and visual elements maintain your branding
 
-# Define protected branding details
-BRAND_NAME="Emmkash-Tech"
-BRAND_CONTACT="0112735877"
-BRAND_TELEGRAM="t.me/emmkash"
-BRAND_COPYRIGHT="© Emmkash Tech 2023"
-
-# Create a protected issue banner (displayed at login)
 # Create backup directory
 mkdir -p /root/banner-backups
 
@@ -647,20 +640,22 @@ if [ -f "/etc/issue.net" ]; then
 fi
 
 # Create a new issue banner with your protected branding
-cat > /etc/issue.net << EOF
-<b>════════════════════════════════════════════</b>
-             ★ $BRAND_NAME VPS ★
-<b>════════════════════════════════════════════</b>
-           Premium VPS Solutions
-<b>════════════════════════════════════════════</b>
-
-✅ NO SPAM ✅ NO DDOS ✅ NO FRAUD
-✅ NO TORRENT ✅ NO HACKING
-
-Contact: $BRAND_TELEGRAM
-$BRAND_COPYRIGHT
-
-<b>════════════════════════════════════════════</b>
+cat > /etc/issue.net << 'EOF'
+<p style="text-align:center">
+<font color='#FF0059'>▬</font><font color='#F1006F'>▬</font><font color='#E30085'>▬</font><font color='#D6009B'>▬</font><font color='#C800B1'>▬</font><font color='#BB00C7'>ஜ</font><font color='#AD00DD'>۩</font><font color='#9F00F3'>۞</font><font color='#9F00F3'>۩</font><font color='#AD00DD'>ஜ</font><font color='#BB00C7'>▬</font><font color='#C800B1'>▬</font><font color='#D6009B'>▬</font><font color='#E30085'>▬</font><font color='#F1006F'>▬</font><br>
+<font color="red"><b> --- ۩ PREMIUM VPS  SCRIPT SSH& V2RAY۩ ---
+ </b></font><br>
+<font color='red'> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 𝐄𝐌𝐌𝐊𝐀𝐒𝐇 𝐓𝐄𝐂𝐇
+</font><br>
+<font color='#20CDCC'><b>         NO SPAM           </b></font><br>
+<font color='#10C7E5'><b>         NO DDOS           </b></font><br>
+<font color='#00C1FF'><b>  NO HACKING AND CARDING   </b></font><br>
+<font color="#E51369"><b>    Multi Login BANNED!!     </b></font><br>
+<font color='red'><b> Server Auto Reboot At midnight(00:00) </b></font><br>
+<font color="#556B2F"><b>
+OUR SERVICES NUMBER:+254112735877
+</br></font><br>
+<font color='#FF0059'>▬</font><font color='#F1006F'>▬</font><font color='#E30085'>▬</font><font color='#D6009B'>▬</font><font color='#C800B1'>▬</font><font color='#BB00C7'>ஜ</font><font color='#AD00DD'>۩</font><font color='#9F00F3'>۞</font><font color='#9F00F3'>۩</font><font color='#AD00DD'>ஜ</font><font color='#BB00C7'>▬</font><font color='#C800B1'>▬</font><font color='#D6009B'>▬</font><font color='#E30085'>▬</font><font color='#F1006F'>▬</font>
 EOF
 
 # Make sure SSH banner is enabled
@@ -669,132 +664,18 @@ if ! grep -q "Banner /etc/issue.net" /etc/ssh/sshd_config; then
     systemctl restart sshd
 fi
 
-# Create protected MOTD (Message of the Day)
-# Backup original motd files
-mkdir -p /root/banner-backups/motd
-if [ -d "/etc/update-motd.d" ]; then
-    cp -r /etc/update-motd.d/* /root/banner-backups/motd/
-fi
-
-# Create/update MOTD with brand protection
-mkdir -p /etc/update-motd.d
-cat > /etc/update-motd.d/00-header << EOF
-#!/bin/sh
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo "             \033[1;34m★ $BRAND_NAME VPS ★\033[0m"
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-echo "     \033[1;36mWelcome to \$(hostname) Server\033[0m"
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-EOF
-
-chmod +x /etc/update-motd.d/00-header
-
-cat > /etc/update-motd.d/99-footer << EOF
-#!/bin/sh
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo "       \033[1;32mContact Admin: $BRAND_TELEGRAM\033[0m"
-echo "       \033[1;32m$BRAND_COPYRIGHT\033[0m"
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-EOF
-
-chmod +x /etc/update-motd.d/99-footer
-
-# Create a protected version check script
-cat > /etc/cron.daily/version-check << EOF
-#!/bin/bash
-# Daily version check with protected branding
-
-BRAND_NAME="$BRAND_NAME"
-BRAND_TELEGRAM="$BRAND_TELEGRAM"
-
-CURRENT_VERSION=\$(cat /opt/.ver 2>/dev/null || echo "1.0")
-LATEST_VERSION=\$(curl -s https://raw.githubusercontent.com/kashy254/sshnew/master/menu/versi)
-
-if [ "\$LATEST_VERSION" != "\$CURRENT_VERSION" ]; then
-    echo "New version available: \$LATEST_VERSION (current: \$CURRENT_VERSION)" >> /var/log/version-check.log
-    echo "Contact $BRAND_TELEGRAM for updates" >> /var/log/version-check.log
-fi
-EOF
-
-chmod +x /etc/cron.daily/version-check
-
 # Create a protection verification script for banners
 cat > /etc/cron.daily/verify-banners << 'EOF'
 #!/bin/bash
 # Daily verification of banner integrity
-# This ensures banners maintain your protected branding
 
-BRAND_NAME="Emmkash-Tech"
-BRAND_CONTACT="0112735877"
-BRAND_TELEGRAM="t.me/emmkash"
-BRAND_COPYRIGHT="© Emmkash Tech 2023"
+# Check if banner has been modified
+CURRENT_BANNER_MD5=$(md5sum /etc/issue.net | cut -d' ' -f1)
+ORIGINAL_BANNER_MD5=$(md5sum /etc/banner/default-banner.conf | cut -d' ' -f1)
 
-# Check issue.net banner
-if ! grep -q "$BRAND_NAME" /etc/issue.net; then
-    echo "Banner tampered with, restoring from template on $(date)" >> /var/log/menu-security.log
-    
-    # Restore from template
-    cat > /etc/issue.net << EOFB
-<b>════════════════════════════════════════════</b>
-             ★ $BRAND_NAME VPS ★
-<b>════════════════════════════════════════════</b>
-           Premium VPS Solutions
-<b>════════════════════════════════════════════</b>
-
-✅ NO SPAM ✅ NO DDOS ✅ NO FRAUD
-✅ NO TORRENT ✅ NO HACKING
-
-Contact: $BRAND_TELEGRAM
-$BRAND_COPYRIGHT
-
-<b>════════════════════════════════════════════</b>
-EOFB
-fi
-
-# Check MOTD files
-if [ -f "/etc/update-motd.d/00-header" ]; then
-    if ! grep -q "$BRAND_NAME" /etc/update-motd.d/00-header; then
-        echo "MOTD header tampered with, restoring from template on $(date)" >> /var/log/menu-security.log
-        
-        # Restore from template
-        cat > /etc/update-motd.d/00-header << EOFM
-#!/bin/sh
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo "             \033[1;34m★ $BRAND_NAME VPS ★\033[0m"
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-echo "     \033[1;36mWelcome to \$(hostname) Server\033[0m"
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-EOFM
-        chmod +x /etc/update-motd.d/00-header
-    fi
-fi
-
-if [ -f "/etc/update-motd.d/99-footer" ]; then
-    if ! grep -q "$BRAND_NAME" /etc/update-motd.d/99-footer; then
-        echo "MOTD footer tampered with, restoring from template on $(date)" >> /var/log/menu-security.log
-        
-        # Restore from template
-        cat > /etc/update-motd.d/99-footer << EOFF
-#!/bin/sh
-echo ""
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo "       \033[1;32mContact Admin: $BRAND_TELEGRAM\033[0m"
-echo "       \033[1;32m$BRAND_COPYRIGHT\033[0m"
-echo "\033[1;33m════════════════════════════════════════════\033[0m"
-echo ""
-EOFF
-        chmod +x /etc/update-motd.d/99-footer
-    fi
+if [ "$CURRENT_BANNER_MD5" != "$ORIGINAL_BANNER_MD5" ]; then
+    echo "Banner modified, restoring from default on $(date)" >> /var/log/menu-security.log
+    cp /etc/banner/default-banner.conf /etc/issue.net
 fi
 EOF
 
@@ -956,4 +837,11 @@ echo " Auto reboot in 10 Seconds "
 sleep 10
 rm -rf setup.sh
 reboot
+
+# // banner /etc/issue.net
+mkdir -p /etc/banner
+cp banner/new-banner.conf /etc/banner/default-banner.conf
+cp /etc/banner/default-banner.conf /etc/issue.net
+echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config
+sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
 
